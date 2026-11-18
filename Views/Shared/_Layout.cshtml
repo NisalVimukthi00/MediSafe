@@ -1,50 +1,113 @@
-﻿<!DOCTYPE html>
+@using MedSafe.Web.Models
+@using MedSafe.Web.Services
+@{
+    var user = ViewBag.CurrentUser as User;
+    var isEmployee = user != null && user.IsEmployee;
+    var active = (ViewBag.Active as string) ?? "";
+    var noticeCount = (int)(ViewBag.NoticeCount ?? 0);
+    var reviewCount = (int)(ViewBag.ReviewCount ?? 0);
+    var customerCount = (int)(ViewBag.CustomerCount ?? 0);
+    var commentCount = (int)(ViewBag.CommentCount ?? 0);
+    var selectionCount = (int)(ViewBag.SelectionCount ?? 0);
+    var myCommentCount = (int)(ViewBag.MyCommentCount ?? 0);
+}
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - MediSafe</title>
-    <script type="importmap"></script>
-    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>@ViewData["Title"] &middot; MedSafe</title>
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/MediSafe.styles.css" asp-append-version="true" />
 </head>
 <body>
-    <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-            <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">MediSafe</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-                        </li>
-                    </ul>
+<div id="app">
+    <div class="topbar">
+        <a class="brand" asp-controller="Home" asp-action="Index">
+            <div class="logo">MS</div>
+            <span>MedSafe Recall Platform</span>
+        </a>
+        <form class="gsearch-form" asp-controller="Notices" asp-action="Search" method="get">
+            <input class="gsearch" type="search" name="q" placeholder="Search all notices…  (Enter)" value="@ViewData["GlobalQuery"]" />
+        </form>
+        <div class="spacer"></div>
+        @if (user != null)
+        {
+            <div class="who">
+                <div style="text-align:right;line-height:1.25">
+                    <div style="font-weight:650;font-size:12.9px">@user.Name</div>
+                    <div style="font-size:11.2px;color:#9dbcdb">@user.Email</div>
                 </div>
+                <div class="avatar">@user.Initials</div>
+                <span class="rolebadge @(isEmployee ? "" : "customer")">@(isEmployee ? "employee" : "customer")</span>
             </div>
-        </nav>
-    </header>
-    <div class="container">
-        <main role="main" class="pb-3">
+            <form asp-controller="Account" asp-action="Logout" method="post">
+                <button class="btn btn-ghost btn-sm" type="submit" style="background:transparent;border-color:rgba(255,255,255,.28);color:#fff">Log out</button>
+            </form>
+        }
+    </div>
+
+    <div class="layout">
+        <aside class="sidebar">
+            @if (user != null && isEmployee)
+            {
+                <div class="navgroup">Workspace</div>
+                <a class="navitem @(active == "dashboard" ? "active" : "")" asp-controller="Home" asp-action="Index"><span class="ic">▣</span><span>Dashboard</span></a>
+                <a class="navitem @(active == "search" ? "active" : "")" asp-controller="Notices" asp-action="Search"><span class="ic">🔍</span><span>Search Notices</span></a>
+                <a class="navitem @(active == "selection" ? "active" : "")" asp-controller="Selection" asp-action="Index">
+                    <span class="ic">✓</span><span>Selected Notices</span>@if (selectionCount > 0) { <span class="count">@selectionCount</span> }
+                </a>
+                <a class="navitem @(active == "reviews" ? "active" : "")" asp-controller="Reviews" asp-action="Index">
+                    <span class="ic">📁</span><span>Risk Reviews</span>@if (reviewCount > 0) { <span class="count">@reviewCount</span> }
+                </a>
+                <div class="navgroup">Output</div>
+                <a class="navitem @(active == "reports" ? "active" : "")" asp-controller="Reports" asp-action="Index"><span class="ic">📄</span><span>Reports</span></a>
+                <a class="navitem @(active == "customers" ? "active" : "")" asp-controller="Customers" asp-action="Index">
+                    <span class="ic">👥</span><span>Customers</span>@if (customerCount > 0) { <span class="count">@customerCount</span> }
+                </a>
+                <div class="navgroup">Reference</div>
+                <a class="navitem @(active == "coverage" ? "active" : "")" asp-controller="Reference" asp-action="Coverage"><span class="ic">🏳</span><span>User Story Coverage</span></a>
+                <a class="navitem @(active == "data" ? "active" : "")" asp-controller="Reference" asp-action="Data"><span class="ic">💾</span><span>Data &amp; Dataset</span></a>
+            }
+            else if (user != null)
+            {
+                <div class="navgroup">Shared with me</div>
+                <a class="navitem @(active == "dashboard" ? "active" : "")" asp-controller="Home" asp-action="Index"><span class="ic">▣</span><span>Dashboard</span></a>
+                <a class="navitem @(active == "shared" ? "active" : "")" asp-controller="Shared" asp-action="Index">
+                    <span class="ic">📂</span><span>Shared Findings</span>@if (reviewCount > 0) { <span class="count">@reviewCount</span> }
+                </a>
+                <div class="navgroup">My activity</div>
+                <a class="navitem @(active == "mycomments" ? "active" : "")" asp-controller="Comments" asp-action="Mine">
+                    <span class="ic">💬</span><span>My Comments</span>@if (myCommentCount > 0) { <span class="count">@myCommentCount</span> }
+                </a>
+            }
+            @if (user != null)
+            {
+                <div class="sidefoot">
+                    Signed in as <b>@user.Name</b><br />
+                    @(isEmployee ? "Company employee · " + (user.Team ?? "Risk team") : "Customer account" + (string.IsNullOrEmpty(user.Organisation) ? "" : " · " + user.Organisation))
+                    <br /><br />@noticeCount notices in dataset &middot; @commentCount comments stored
+                </div>
+            }
+        </aside>
+
+        <main class="content">
+            @if (TempData["ok"] != null)
+            {
+                <div class="toast ok" data-auto-dismiss><span>✓</span><span>@TempData["ok"]</span></div>
+            }
+            @if (TempData["err"] != null)
+            {
+                <div class="toast err" data-auto-dismiss><span>⚠</span><span>@TempData["err"]</span></div>
+            }
+            @if (TempData["warn"] != null)
+            {
+                <div class="toast warn" data-auto-dismiss><span>ⓘ</span><span>@TempData["warn"]</span></div>
+            }
             @RenderBody()
         </main>
     </div>
-
-    <footer class="border-top footer text-muted">
-        <div class="container">
-            &copy; 2026 - MediSafe - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-        </div>
-    </footer>
-    <script src="~/lib/jquery/dist/jquery.min.js"></script>
-    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="~/js/site.js" asp-append-version="true"></script>
-    @await RenderSectionAsync("Scripts", required: false)
+</div>
+<script src="~/js/site.js" asp-append-version="true"></script>
+@await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

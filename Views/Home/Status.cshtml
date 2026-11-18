@@ -1,0 +1,11 @@
+@{
+    ViewData["Title"] = "Page not available";
+}
+<div class="empty">
+    <div class="big">&#9888;</div>
+    <h4>@ViewBag.Code &mdash; page not available</h4>
+    <p>@ViewBag.Message</p>
+    <div style="margin-top:14px">
+        <a class="btn btn-primary" asp-controller="Home" asp-action="Index">Back to dashboard</a>
+    </div>
+</div>
