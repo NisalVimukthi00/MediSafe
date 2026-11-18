@@ -6,10 +6,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace MedSafe.Web.Controllers
 {
-    /// <summary>
+
     /// Search the notice dataset, open a notice, and the autocomplete endpoint used by
     /// the search box. Customers cannot reach any of these actions.
-    /// </summary>
     public class NoticesController : BaseController
     {
         private const int PageSize = 8;
