@@ -1,15 +1,17 @@
-using MedSafe.Web.Data;
-using MedSafe.Web.Models;
-using MedSafe.Web.Services;
+using ANDtr.Web.Data;
+using ANDtr.Web.Models;
+using ANDtr.Web.Services;
+using MedSafe.Web.Controllers;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
-namespace MedSafe.Web.Controllers
+namespace ANDtr.Web.Controllers
 {
     /// <summary>Sign in, sign out and the demo account shortcuts on the login screen.</summary>
     public class AccountController : BaseController
     {
-        public AccountController(MedSafeDbContext db, CurrentUserService current, SearchService search)
+        public AccountController(ANDtrDbContext db, CurrentUserService current, SearchService search)
             : base(db, current, search) { }
 
         [HttpGet]
