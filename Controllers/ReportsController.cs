@@ -1,20 +1,21 @@
-using MedSafe.Web.Data;
-using MedSafe.Web.Models;
-using MedSafe.Web.Services;
+using ANDtr.Web.Data;
+using ANDtr.Web.Models;
+using ANDtr.Web.Services;
+using MedSafe.Web.Controllers;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
-namespace MedSafe.Web.Controllers
+namespace ANDtr.Web.Controllers
 {
-    /// <summary>
+
     /// Report generation and dataset export. The PDF contains the review header, every
     /// selected notice with its full dataset record and all comments for each notice.
-    /// </summary>
+
     public class ReportsController : BaseController
     {
         private readonly PdfReportService _pdf;
 
-        public ReportsController(MedSafeDbContext db, CurrentUserService current, SearchService search, PdfReportService pdf)
+        public ReportsController(ANDtrDbContext db, CurrentUserService current, SearchService search, PdfReportService pdf)
             : base(db, current, search)
         {
             _pdf = pdf;
@@ -80,10 +81,10 @@ namespace MedSafe.Web.Controllers
                 .Where(ch => char.IsLetterOrDigit(ch) || ch == ' ' || ch == '-')
                 .ToArray()).Trim().Replace(' ', '-');
 
-            return File(bytes, "application/pdf", $"MedSafe-Risk-Review-{safeName}.pdf");
+            return File(bytes, "application/pdf", $"ANDtr-Risk-Review-{safeName}.pdf");
         }
 
-        /// <summary>Full database export for backup / hand-over.</summary>
+        /// Full database export for backup / hand-over.
         public IActionResult ExportJson()
         {
             var guard = RequireEmployee();
@@ -91,31 +92,61 @@ namespace MedSafe.Web.Controllers
 
             var payload = new
             {
-                platform = "MedSafe Recall Platform",
+                platform = "ANDtr Recall Platform",
                 exportedAt = DateTime.UtcNow,
                 notices = Db.SafetyNotices.AsNoTracking().OrderBy(n => n.Id).Select(n => new
                 {
-                    n.Id, n.DeviceName, n.Manufacturer, n.DeviceType, n.Model, n.Severity,
-                    n.NoticeType, date = n.NoticeDate.ToString("yyyy-MM-dd"), n.Status, n.Authority,
-                    n.Reference, n.AffectedUnits, n.Distribution, n.Summary, n.Hazard, n.Details, n.Action, n.Keywords
+                    n.Id,
+                    n.DeviceName,
+                    n.Manufacturer,
+                    n.DeviceType,
+                    n.Model,
+                    n.Severity,
+                    n.NoticeType,
+                    date = n.NoticeDate.ToString("yyyy-MM-dd"),
+                    n.Status,
+                    n.Authority,
+                    n.Reference,
+                    n.AffectedUnits,
+                    n.Distribution,
+                    n.Summary,
+                    n.Hazard,
+                    n.Details,
+                    n.Action,
+                    n.Keywords
                 }),
                 users = Db.Users.AsNoTracking().Select(u => new
                 {
-                    u.Id, u.Name, u.Email,
+                    u.Id,
+                    u.Name,
+                    u.Email,
                     role = u.Role == UserRole.Employee ? "employee" : "customer",
-                    u.Team, u.Organisation, u.CreatedAt, u.CreatedBy
+                    u.Team,
+                    u.Organisation,
+                    u.CreatedAt,
+                    u.CreatedBy
                 }),
                 reviews = Db.RiskReviews.AsNoTracking().Include(r => r.Notices).Include(r => r.Shares).Select(r => new
                 {
-                    r.Id, r.Name, owner = r.Owner!.Name, r.Description, r.CreatedAt, r.UpdatedAt,
+                    r.Id,
+                    r.Name,
+                    owner = r.Owner!.Name,
+                    r.Description,
+                    r.CreatedAt,
+                    r.UpdatedAt,
                     notices = r.Notices.Select(x => x.SafetyNoticeId),
                     shares = r.Shares.Select(s => new { customer = s.Customer!.Email, s.SharedAt, s.SharedBy, s.HiddenByCustomer })
                 }),
                 comments = Db.Comments.AsNoTracking().Select(c => new
                 {
-                    c.Id, c.SafetyNoticeId, c.RiskReviewId, author = c.Author!.Name,
+                    c.Id,
+                    c.SafetyNoticeId,
+                    c.RiskReviewId,
+                    author = c.Author!.Name,
                     role = c.AuthorRole == UserRole.Employee ? "employee" : "customer",
-                    c.Text, c.CreatedAt, c.UpdatedAt
+                    c.Text,
+                    c.CreatedAt,
+                    c.UpdatedAt
                 })
             };
 
@@ -123,10 +154,10 @@ namespace MedSafe.Web.Controllers
                 new System.Text.Json.JsonSerializerOptions { WriteIndented = true });
 
             return File(System.Text.Encoding.UTF8.GetBytes(json),
-                "application/json", $"medsafe-database-{DateTime.UtcNow:yyyyMMdd}.json");
+                "application/json", $"andtr-database-{DateTime.UtcNow:yyyyMMdd}.json");
         }
 
-        /// <summary>Spreadsheet-friendly CSV of the notice dataset.</summary>
+        /// Spreadsheet-friendly CSV of the notice dataset.
         public IActionResult ExportCsv()
         {
             var guard = RequireEmployee();
@@ -147,7 +178,7 @@ namespace MedSafe.Web.Controllers
             }
 
             return File(System.Text.Encoding.UTF8.GetBytes(sb.ToString()), "text/csv",
-                $"medsafe-notices-{DateTime.UtcNow:yyyyMMdd}.csv");
+                $"andtr-notices-{DateTime.UtcNow:yyyyMMdd}.csv");
         }
     }
 }
