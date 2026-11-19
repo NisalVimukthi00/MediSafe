@@ -1,11 +1,11 @@
-using MedSafe.Web.Data;
-using MedSafe.Web.Models;
-using MedSafe.Web.Services;
+using ANDtr.Web.Data;
+using ANDtr.Web.Models;
+using ANDtr.Web.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.EntityFrameworkCore;
 
-namespace MedSafe.Web.Controllers
+namespace ANDtr.Web.Controllers
 {
     /// <summary>
     /// Shared base for every controller: loads the signed-in account and the counter
@@ -13,11 +13,11 @@ namespace MedSafe.Web.Controllers
     /// </summary>
     public abstract class BaseController : Controller
     {
-        protected readonly MedSafeDbContext Db;
+        protected readonly ANDtrDbContext Db;
         protected readonly CurrentUserService Current;
         protected readonly SearchService SearchEngine;
 
-        protected BaseController(MedSafeDbContext db, CurrentUserService current, SearchService search)
+        protected BaseController(ANDtrDbContext db, CurrentUserService current, SearchService search)
         {
             Db = db;
             Current = current;
