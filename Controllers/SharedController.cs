@@ -1,8 +1,8 @@
-using MedSafe.Web.Data;
-using MedSafe.Web.Services;
+using ANDtr.Web.Data;
+using ANDtr.Web.Services;
 using Microsoft.AspNetCore.Mvc;
 
-namespace MedSafe.Web.Controllers
+namespace ANDtr.Web.Controllers
 {
     /// <summary>
     /// URL alias for the customer portal (/Shared). Keeps the navigation short while the
