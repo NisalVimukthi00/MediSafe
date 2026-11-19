@@ -1,10 +1,10 @@
-using MedSafe.Web.Data;
-using MedSafe.Web.Models;
-using MedSafe.Web.Services;
+using ANDtr.Web.Data;
+using ANDtr.Web.Models;
+using ANDtr.Web.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
-namespace MedSafe.Web.Controllers
+namespace ANDtr.Web.Controllers
 {
     /// <summary>
     /// Comment add / edit / delete. Authors can only change their own comments; customers
@@ -13,7 +13,7 @@ namespace MedSafe.Web.Controllers
     /// </summary>
     public class CommentsController : BaseController
     {
-        public CommentsController(MedSafeDbContext db, CurrentUserService current, SearchService search)
+        public CommentsController(ANDtrDbContext db, CurrentUserService current, SearchService search)
             : base(db, current, search) { }
 
         [HttpPost]
