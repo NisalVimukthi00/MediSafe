@@ -1,10 +1,10 @@
-using MedSafe.Web.Data;
-using MedSafe.Web.Models;
-using MedSafe.Web.Services;
+using ANDtr.Web.Data;
+using ANDtr.Web.Models;
+using ANDtr.Web.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
-namespace MedSafe.Web.Controllers
+namespace ANDtr.Web.Controllers
 {
     /// <summary>
     /// Customer account administration. Employees create the account; the customer can then
@@ -14,7 +14,7 @@ namespace MedSafe.Web.Controllers
     {
         public const string DefaultCustomerPassword = "customer123";
 
-        public CustomersController(MedSafeDbContext db, CurrentUserService current, SearchService search)
+        public CustomersController(ANDtrDbContext db, CurrentUserService current, SearchService search)
             : base(db, current, search) { }
 
         public IActionResult Index()
