@@ -1,19 +1,21 @@
-using MedSafe.Web.Data;
+using ANDtr.Web.Data;
+using ANDtr.Web.Models;
+using ANDtr.Web.Services;
 using MedSafe.Web.Models;
-using MedSafe.Web.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
-namespace MedSafe.Web.Controllers
+namespace ANDtr.Web.Controllers
 {
-
+    /// <summary>
     /// Search the notice dataset, open a notice, and the autocomplete endpoint used by
-    
+    /// the search box. Customers cannot reach any of these actions.
+    /// </summary>
     public class NoticesController : BaseController
     {
         private const int PageSize = 8;
 
-        public NoticesController(MedSafeDbContext db, CurrentUserService current, SearchService search)
+        public NoticesController(ANDtrDbContext db, CurrentUserService current, SearchService search)
             : base(db, current, search) { }
 
         public IActionResult Search(string? q, string? deviceType, string? manufacturer, string? severity,
