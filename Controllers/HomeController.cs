@@ -1,15 +1,16 @@
-using MedSafe.Web.Data;
-using MedSafe.Web.Models;
-using MedSafe.Web.Services;
+using ANDtr.Web.Data;
+using ANDtr.Web.Models;
+using ANDtr.Web.Services;
+using MedSafe.Web.Controllers;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
-namespace MedSafe.Web.Controllers
+namespace ANDtr.Web.Controllers
 {
     /// <summary>Dashboard for both roles, plus shared error pages.</summary>
     public class HomeController : BaseController
     {
-        public HomeController(MedSafeDbContext db, CurrentUserService current, SearchService search)
+        public HomeController(ANDtrDbContext db, CurrentUserService current, SearchService search)
             : base(db, current, search) { }
 
         public IActionResult Index()
@@ -82,7 +83,7 @@ namespace MedSafe.Web.Controllers
         {
             ViewBag.Code = code;
             ViewBag.Message = code == 404
-                ? "The page you asked for does not exist in the MedSafe platform."
+                ? "The page you asked for does not exist in the ANDtr platform."
                 : "That request could not be completed.";
             return View("Status");
         }
