@@ -1,19 +1,19 @@
-using MedSafe.Web.Data;
-using MedSafe.Web.Models;
-using MedSafe.Web.Services;
+using ANDtr.Web.Data;
+using ANDtr.Web.Models;
+using ANDtr.Web.Services;
+using MedSafe.Web.Controllers;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
-namespace MedSafe.Web.Controllers
+namespace ANDtr.Web.Controllers
 {
-    /// <summary>
     /// The employee's selection bucket: notices ticked while searching that are waiting to
     /// be grouped into a named risk review. A notice can be selected from the results list
     /// or its details page, deselected at any time, and is never added twice.
-    /// </summary>
+
     public class SelectionController : BaseController
     {
-        public SelectionController(MedSafeDbContext db, CurrentUserService current, SearchService search)
+        public SelectionController(ANDtrDbContext db, CurrentUserService current, SearchService search)
             : base(db, current, search) { }
 
         public IActionResult Index()
@@ -33,7 +33,7 @@ namespace MedSafe.Web.Controllers
             return View(items);
         }
 
-        /// <summary>Tick / untick a notice. Posting the same id twice is a no-op.</summary>
+        /// Tick / untick a notice. Posting the same id twice is a no-op.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult Toggle(string noticeId, string? returnUrl)
