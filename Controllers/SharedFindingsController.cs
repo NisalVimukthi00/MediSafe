@@ -1,10 +1,10 @@
-using MedSafe.Web.Data;
-using MedSafe.Web.Models;
-using MedSafe.Web.Services;
+using ANDtr.Web.Data;
+using ANDtr.Web.Models;
+using ANDtr.Web.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
-namespace MedSafe.Web.Controllers
+namespace ANDtr.Web.Controllers
 {
     /// <summary>
     /// Customer portal: the findings shared with the signed-in customer. Notices and
@@ -13,7 +13,7 @@ namespace MedSafe.Web.Controllers
     /// </summary>
     public class SharedFindingsController : BaseController
     {
-        public SharedFindingsController(MedSafeDbContext db, CurrentUserService current, SearchService search)
+        public SharedFindingsController(ANDtrDbContext db, CurrentUserService current, SearchService search)
             : base(db, current, search) { }
 
         public IActionResult Index()
