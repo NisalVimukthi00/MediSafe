@@ -8,7 +8,7 @@ namespace MedSafe.Web.Controllers
 {
 
     /// Search the notice dataset, open a notice, and the autocomplete endpoint used by
-    /// the search box. Customers cannot reach any of these actions.
+    
     public class NoticesController : BaseController
     {
         private const int PageSize = 8;
