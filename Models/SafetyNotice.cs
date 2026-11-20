@@ -1,11 +1,12 @@
 using System.ComponentModel.DataAnnotations;
+using System.Xml.Linq;
 
-namespace MedSafe.Web.Models
+namespace ANDtr.Web.Models
 {
     /// <summary>
     /// One record from the provided medical device safety / recall notice dataset.
     /// The string primary key is the notice identifier published by the authority
-    /// (e.g. MS-2026-014) so records stay traceable to the dataset.
+    /// (e.g. ANDTR-2026-014) so records stay traceable to the dataset.
     /// </summary>
     public class SafetyNotice
     {
